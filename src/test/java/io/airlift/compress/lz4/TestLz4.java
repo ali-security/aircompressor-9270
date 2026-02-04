@@ -56,6 +56,15 @@ public class TestLz4
     }
 
     @Test
+    void testZeroMatchOffset()
+    {
+        byte[] compressed = new byte[] {15, 0, 0, -1, -1, -118, 49, -1, -1, 0};
+        assertThatThrownBy(() -> getDecompressor().decompress(compressed, 0, compressed.length, new byte[1024], 0, 1024))
+                .isInstanceOf(MalformedInputException.class)
+                .hasMessageContaining("offset outside destination buffer: offset=3");
+    }
+
+    @Test
     public void testLiteralLengthOverflow()
             throws IOException
     {
